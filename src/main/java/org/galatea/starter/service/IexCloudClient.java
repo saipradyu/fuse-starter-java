@@ -6,7 +6,7 @@ import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
-@FeignClient(name = "Cloud", url = "${spring.rest.iexCloudPath}")
+@FeignClient(name = "IexCloud", url = "${spring.rest.iexCloudPath}")
 public interface IexCloudClient {
 
   /**
@@ -27,7 +27,7 @@ public interface IexCloudClient {
    * @param range specified date range to fetch historical data
    * @return list of historical price data for the symbol passed
    */
-  @GetMapping("/stock/{symbol}/chart/{range}/?token=${spring.rest.iexCloudToken}")
+  @GetMapping("/stock/{symbol}/chart/{range}?token=${spring.rest.iexCloudToken}")
   public List<IexHistoricalPrice> getHistoricalPricesByRange(@PathVariable String symbol,
       @PathVariable String range);
 
@@ -39,7 +39,7 @@ public interface IexCloudClient {
    * @param date specified date to fetch historical data
    * @return list of historical price data for the symbol passed
    */
-  @GetMapping("/stock/{symbol}/chart/date/{date}/?token=${spring.rest.iexCloudToken}")
+  @GetMapping("/stock/{symbol}/chart/date/{date}?token=${spring.rest.iexCloudToken}")
   public List<IexHistoricalPrice> getHistoricalPricesByDate(@PathVariable String symbol,
       @PathVariable String date);
 }

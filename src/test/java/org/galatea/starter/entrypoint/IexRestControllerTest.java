@@ -81,4 +81,54 @@ public class IexRestControllerTest extends ASpringTest {
         .andExpect(jsonPath("$", is(Collections.emptyList())))
         .andReturn();
   }
+
+  @Test
+  public void testGetHistoricalPricesByRange() throws Exception {
+    MvcResult result = this.mvc.perform(
+        org.springframework.test.web.servlet.request.MockMvcRequestBuilders
+            .get("/iex/historicalPrices?symbol=twtr&range=5d")
+            .accept(MediaType.APPLICATION_JSON_VALUE))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$[0].symbol", is("TWTR")))
+        .andExpect(jsonPath("$[0].open").value(new BigDecimal("64.34")))
+        .andExpect(jsonPath("$[1].high").value(new BigDecimal("63.84")))
+        .andExpect(jsonPath("$[2].low").value(new BigDecimal("62.07")))
+        .andExpect(jsonPath("$[0].close").value(new BigDecimal("63.78")))
+        .andExpect(jsonPath("$[1].volume").value(Long.valueOf("6950259")))
+        .andExpect(jsonPath("$[2].date", is("2021-08-18")))
+        .andReturn();
+  }
+
+  @Test
+  public void testGetHistoricalPricesByDate() throws Exception {
+    MvcResult result = this.mvc.perform(
+            org.springframework.test.web.servlet.request.MockMvcRequestBuilders
+                .get("/iex/historicalPrices?symbol=twtr&date=20210816")
+                .accept(MediaType.APPLICATION_JSON_VALUE))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$[1].open").value(new BigDecimal("64.485")))
+        .andExpect(jsonPath("$[2].high").value(new BigDecimal("64.53")))
+        .andExpect(jsonPath("$[3].low").value(new BigDecimal("64.62")))
+        .andExpect(jsonPath("$[4].close").value(new BigDecimal("64.775")))
+        .andExpect(jsonPath("$[5].volume").value(Long.valueOf("716")))
+        .andExpect(jsonPath("$[6].date", is("2021-08-16")))
+        .andReturn();
+  }
+
+  @Test
+  public void testGetHistoricalPrices() throws Exception {
+    MvcResult result = this.mvc.perform(
+            org.springframework.test.web.servlet.request.MockMvcRequestBuilders
+                .get("/iex/historicalPrices?symbol=twtr")
+                .accept(MediaType.APPLICATION_JSON_VALUE))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$[0].symbol", is("TWTR")))
+        .andExpect(jsonPath("$[1].open").value(new BigDecimal("67.59")))
+        .andExpect(jsonPath("$[2].high").value(new BigDecimal("70.13")))
+        .andExpect(jsonPath("$[3].low").value(new BigDecimal("69.88")))
+        .andExpect(jsonPath("$[4].close").value(new BigDecimal("68.69")))
+        .andExpect(jsonPath("$[5].volume").value(Long.valueOf("16988334")))
+        .andExpect(jsonPath("$[6].date", is("2021-07-28")))
+        .andReturn();
+  }
 }

@@ -34,6 +34,7 @@ jms:
 cache-config: ehcache.xml
 # Set debug level logging for the IEX Client so that Feign requests and responses are logged out
 log.level.org.galatea.starter.service.IEXClient: DEBUG
+log.level.org.galatea.starter.service.IEXCloudClient: DEBUG
 # Set info level logging for the autoconfigure package so that it doesn't print out the entire
 # CONDITIONS EVALUATION REPORT on startup
 logging.level.org.springframework.boot.autoconfigure: INFO
@@ -48,6 +49,7 @@ spring:
    rest:
       # this points at the local WireMock server in the test environment.
       iexBasePath: http://localhost:${wiremock.server.port}/
+      iexCloudPath: http://localhost:${wiremock.server.port}/
       iexCloudToken: pk_398f22558d024d7ca05e79961bfdb3f7
 ---
 # Dev properties go here
