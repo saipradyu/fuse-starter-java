@@ -1,10 +1,12 @@
 package org.galatea.starter.service;
 
+import com.ctc.wstx.msv.GenericMsvValidator;
 import java.util.Collections;
 import java.util.List;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.galatea.starter.domain.IexHistoricalPrice;
 import org.galatea.starter.domain.IexLastTradedPrice;
 import org.galatea.starter.domain.IexSymbol;
 import org.springframework.stereotype.Service;
@@ -20,7 +22,8 @@ public class IexService {
 
   @NonNull
   private IexClient iexClient;
-
+  @NonNull
+  private IexCloudClient iexCloudClient;
 
   /**
    * Get all stock symbols from IEX.
@@ -45,5 +48,25 @@ public class IexService {
     }
   }
 
-
+  /**
+   * Get the historically adjusted market-wide data for traded symbol given the range or date.
+   *
+   * @param symbol symbol to retrieve historical data
+   * @param date specified date to fetch historical data
+   * @param range specified range to fetch historical data
+   * @return list of historical price data objects for the symbol passed
+   */
+  public List<IexHistoricalPrice> getHistoricalPrices(final String symbol,
+      final String range, final String date) {
+    if (symbol.isEmpty()) {
+      return Collections.emptyList();
+    }
+    if (date != null) {
+      return iexCloudClient.getHistoricalPricesByDate(symbol, date);
+    } else if (range != null) {
+      return iexCloudClient.getHistoricalPricesByRange(symbol, range);
+    } else {
+      return iexCloudClient.getHistoricalPrices(symbol);
+    }
+  }
 }

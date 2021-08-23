@@ -1,0 +1,8 @@
+{
+  "properties": [
+    {
+      "name": "spring.rest.iexCloudPath",
+      "type": "java.lang.String",
+      "description": "Description for spring.rest.iexCloudPath."
+  }
+] }
