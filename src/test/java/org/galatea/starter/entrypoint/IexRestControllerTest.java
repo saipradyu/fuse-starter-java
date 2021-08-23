@@ -19,6 +19,7 @@ import org.springframework.cloud.contract.wiremock.AutoConfigureWireMock;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 
 @RequiredArgsConstructor
@@ -45,7 +46,7 @@ public class IexRestControllerTest extends ASpringTest {
     MvcResult result = this.mvc.perform(
         // note that we were are testing the fuse REST end point here, not the IEX end point.
         // the fuse end point in turn calls the IEX end point, which is WireMocked for this test.
-        org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get("/iex/symbols")
+        MockMvcRequestBuilders.get("/iex/symbols")
             .accept(MediaType.APPLICATION_JSON_VALUE))
         .andExpect(status().isOk())
         // some simple validations, in practice I would expect these to be much more comprehensive.
@@ -58,8 +59,7 @@ public class IexRestControllerTest extends ASpringTest {
   @Test
   public void testGetLastTradedPrice() throws Exception {
 
-    MvcResult result = this.mvc.perform(
-        org.springframework.test.web.servlet.request.MockMvcRequestBuilders
+    MvcResult result = this.mvc.perform(MockMvcRequestBuilders
             .get("/iex/lastTradedPrice?symbols=FB")
             // This URL will be hit by the MockMvc client. The result is configured in the file
             // src/test/resources/wiremock/mappings/mapping-lastTradedPrice.json
@@ -74,7 +74,7 @@ public class IexRestControllerTest extends ASpringTest {
   public void testGetLastTradedPriceEmpty() throws Exception {
 
     MvcResult result = this.mvc.perform(
-        org.springframework.test.web.servlet.request.MockMvcRequestBuilders
+        MockMvcRequestBuilders
             .get("/iex/lastTradedPrice?symbols=")
             .accept(MediaType.APPLICATION_JSON_VALUE))
         .andExpect(status().isOk())
@@ -84,8 +84,7 @@ public class IexRestControllerTest extends ASpringTest {
 
   @Test
   public void testGetHistoricalPricesByRange() throws Exception {
-    MvcResult result = this.mvc.perform(
-        org.springframework.test.web.servlet.request.MockMvcRequestBuilders
+    MvcResult result = this.mvc.perform(MockMvcRequestBuilders
             .get("/iex/historicalPrices?symbol=twtr&range=5d")
             .accept(MediaType.APPLICATION_JSON_VALUE))
         .andExpect(status().isOk())
@@ -101,26 +100,25 @@ public class IexRestControllerTest extends ASpringTest {
 
   @Test
   public void testGetHistoricalPricesByDate() throws Exception {
-    MvcResult result = this.mvc.perform(
-            org.springframework.test.web.servlet.request.MockMvcRequestBuilders
-                .get("/iex/historicalPrices?symbol=twtr&date=20210816")
-                .accept(MediaType.APPLICATION_JSON_VALUE))
+    MvcResult result = this.mvc.perform(MockMvcRequestBuilders
+            .get("/iex/historicalPrices?symbol=twtr&date=20210816")
+            .accept(MediaType.APPLICATION_JSON_VALUE))
         .andExpect(status().isOk())
-        .andExpect(jsonPath("$[1].open").value(new BigDecimal("64.485")))
-        .andExpect(jsonPath("$[2].high").value(new BigDecimal("64.53")))
-        .andExpect(jsonPath("$[3].low").value(new BigDecimal("64.62")))
-        .andExpect(jsonPath("$[4].close").value(new BigDecimal("64.775")))
-        .andExpect(jsonPath("$[5].volume").value(Long.valueOf("716")))
-        .andExpect(jsonPath("$[6].date", is("2021-08-16")))
+        .andExpect(jsonPath("$[0].symbol", is("TWTR")))
+        .andExpect(jsonPath("$[0].open").value(new BigDecimal("64.34")))
+        .andExpect(jsonPath("$[0].high").value(new BigDecimal("64.94")))
+        .andExpect(jsonPath("$[0].low").value(new BigDecimal("62.805")))
+        .andExpect(jsonPath("$[0].close").value(new BigDecimal("63.78")))
+        .andExpect(jsonPath("$[0].volume").value(Long.valueOf("11993858")))
+        .andExpect(jsonPath("$[0].date", is("2021-08-16")))
         .andReturn();
   }
 
   @Test
   public void testGetHistoricalPrices() throws Exception {
-    MvcResult result = this.mvc.perform(
-            org.springframework.test.web.servlet.request.MockMvcRequestBuilders
-                .get("/iex/historicalPrices?symbol=twtr")
-                .accept(MediaType.APPLICATION_JSON_VALUE))
+    MvcResult result = this.mvc.perform(MockMvcRequestBuilders
+            .get("/iex/historicalPrices?symbol=twtr")
+            .accept(MediaType.APPLICATION_JSON_VALUE))
         .andExpect(status().isOk())
         .andExpect(jsonPath("$[0].symbol", is("TWTR")))
         .andExpect(jsonPath("$[1].open").value(new BigDecimal("67.59")))

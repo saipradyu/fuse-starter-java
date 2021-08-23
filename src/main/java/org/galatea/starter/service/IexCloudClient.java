@@ -32,14 +32,15 @@ public interface IexCloudClient {
       @PathVariable String range);
 
   /**
-   * Gets the minute-by-minute data for the date specified for traded symbol
+   * Gets the historically adjusted market-wide data for the date specified for traded symbol
    * See https://iexcloud.io/docs/api/#historical-prices
    *
    * @param symbol symbol to retrieve historical data
    * @param date specified date to fetch historical data
    * @return list of historical price data for the symbol passed
    */
-  @GetMapping("/stock/{symbol}/chart/date/{date}?token=${spring.rest.iexCloudToken}")
+  @GetMapping("/stock/{symbol}/chart/date/{date}?chartByDay=true&token="
+      + "${spring.rest.iexCloudToken}")
   public List<IexHistoricalPrice> getHistoricalPricesByDate(@PathVariable String symbol,
       @PathVariable String date);
 }
